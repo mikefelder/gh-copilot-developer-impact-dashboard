@@ -71,7 +71,7 @@ services:
     depends_on:
       - elasticsearch
     environment:
-      GITHUB_PAT: ${GITHUB_PAT}
+      GITHUB_PAT: ${GITHUB_PAT:-}
       ORGANIZATION_SLUGS: ${ORGANIZATION_SLUGS:-standalone:octodemo-copilot-standalone}
       ELASTICSEARCH_URL: http://elasticsearch:9200
       INDEX_USER_METRICS: copilot_user_metrics
@@ -80,6 +80,7 @@ services:
       ENABLE_DEVELOPER_ACTIVITY: ${ENABLE_DEVELOPER_ACTIVITY:-true}
       DEVELOPER_ACTIVITY_DAYS_BACK: ${DEVELOPER_ACTIVITY_DAYS_BACK:-28}
       EXECUTION_INTERVAL_HOURS: ${EXECUTION_INTERVAL_HOURS:-1}
+      ENABLE_DEMO_MODE: ${ENABLE_DEMO_MODE:-false}
       # Add other environment variables as needed
     restart: unless-stopped
     healthcheck:

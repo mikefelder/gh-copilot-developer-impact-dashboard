@@ -102,8 +102,8 @@ docker-compose up -d
 
 | Variable | Required | Description | Default |
 |----------|----------|-------------|---------|  
-| `GITHUB_PAT` | ✅ Yes | GitHub Personal Access Token | - |
-| `ORGANIZATION_SLUGS` | ✅ Yes | Comma-separated org slugs | - |
+| `GITHUB_PAT` | ✅ Yes* | GitHub Personal Access Token | - |
+| `ORGANIZATION_SLUGS` | ✅ Yes* | Comma-separated org slugs | - |
 | `ELASTICSEARCH_URL` | No | Elasticsearch endpoint | `http://elasticsearch:9200` |
 | `EXECUTION_INTERVAL_HOURS` | No | Data fetch frequency (hours) | `1` |
 | `INDEX_USER_METRICS` | No | User metrics index name | `copilot_user_metrics` |
@@ -111,6 +111,36 @@ docker-compose up -d
 | `INDEX_DEVELOPER_ACTIVITY` | No | Developer activity metrics index | `developer_activity` |
 | `ENABLE_DEVELOPER_ACTIVITY` | No | Enable developer activity collection | `true` |
 | `DEVELOPER_ACTIVITY_DAYS_BACK` | No | Days of history for developer activity | `28` |
+| `ENABLE_DEMO_MODE` | No | Enable demo mode with mock data | `false` |
+
+*\* Not required when `ENABLE_DEMO_MODE=true`*
+
+### 🎭 Demo Mode (No GitHub Token Required)
+
+Want to explore the dashboard without connecting to a real GitHub organization? Use demo mode!
+
+Demo mode automatically generates **5 months of realistic mock data** including:
+- 25 developers across 5 teams
+- Copilot adoption patterns (adoption date ~10 weeks ago)
+- Research-based metrics (30% acceptance rate, 20-30% productivity gains)
+- Pre/post Copilot adoption comparison data
+
+**Quick Start with Demo Mode:**
+```bash
+# Clone and enter the directory
+git clone https://github.com/satomic/copilot-usage-advanced-dashboard.git
+cd copilot-usage-advanced-dashboard
+
+# Start with demo mode enabled
+ENABLE_DEMO_MODE=true docker-compose up -d
+```
+
+Or add to your `.env` file:
+```env
+ENABLE_DEMO_MODE=true
+```
+
+Then access Grafana at **http://localhost:8080** (user: `admin`, pass: `copilot`) to explore the dashboards with realistic sample data.
 
 ---
 

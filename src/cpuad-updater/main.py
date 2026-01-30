@@ -89,6 +89,9 @@ class Paras:
     def date_str():
         return current_time()[:10]
 
+    # Demo Mode
+    enable_demo_mode = os.getenv("ENABLE_DEMO_MODE", "false").lower() == "true"
+
     # GitHub
     github_pat = os.getenv("GITHUB_PAT")
     organization_slugs = os.getenv("ORGANIZATION_SLUGS")
@@ -128,15 +131,24 @@ class Indexes:
 logger = configure_logger(log_path=Paras.log_path)
 logger.info("-----------------Starting-----------------")
 
+# Check demo mode first
+if Paras.enable_demo_mode:
+    logger.info("=" * 60)
+    logger.info("DEMO MODE ENABLED")
+    logger.info("=" * 60)
+    logger.info("Application will generate mock data for demonstration purposes.")
+    logger.info("No GitHub PAT is required in demo mode.")
+else:
+    # Validate github_pat and organization_slugs only when not in demo mode
+    if not Paras.github_pat:
+        logger.error("GitHub PAT not found, exiting...")
+        logger.error("Hint: Set ENABLE_DEMO_MODE=true to run with mock data instead.")
+        exit(1)
 
-# Validate github_pat and organization_slugs, if not present, log an error and exit
-if not Paras.github_pat:
-    logger.error("GitHub PAT not found, exiting...")
-    exit(1)
-
-if not Paras.organization_slugs:
-    logger.error("Organization slugs not found, exiting...")
-    exit(1)
+    if not Paras.organization_slugs:
+        logger.error("Organization slugs not found, exiting...")
+        logger.error("Hint: Set ENABLE_DEMO_MODE=true to run with mock data instead.")
+        exit(1)
 
 
 def github_api_request_handler(url, error_return_value=[]):
@@ -1554,6 +1566,37 @@ def main(organization_slug):
         logger.info(f"Data processing completed for team: {team_slug}")
 
 
+def run_demo_mode():
+    """Run the application in demo mode with mock data."""
+    from generate_mock_data import generate_all_mock_data, load_to_elasticsearch, print_data_summary
+    
+    logger.info("=" * 60)
+    logger.info("Generating mock data for demo mode...")
+    logger.info("=" * 60)
+    
+    # Generate mock data
+    copilot_metrics, developer_activity = generate_all_mock_data()
+    
+    # Print summary
+    print_data_summary(copilot_metrics, developer_activity)
+    
+    # Load to Elasticsearch
+    logger.info("Loading mock data to Elasticsearch...")
+    success = load_to_elasticsearch(copilot_metrics, developer_activity)
+    
+    if success:
+        logger.info("=" * 60)
+        logger.info("🎉 Demo data generation complete!")
+        logger.info("=" * 60)
+        logger.info("Mock data has been loaded. You can now view the dashboards in Grafana.")
+        logger.info("  - Main Dashboard: http://localhost:8080")
+        logger.info("  - Developer Activity Dashboard: http://localhost:8080/d/developer-activity-comparison")
+    else:
+        logger.error("Failed to load demo data to Elasticsearch")
+    
+    return success
+
+
 if __name__ == "__main__":
     import os
     
@@ -1561,27 +1604,72 @@ if __name__ == "__main__":
     execution_interval_hours = int(os.getenv("EXECUTION_INTERVAL_HOURS", "1"))
     execution_interval_seconds = execution_interval_hours * 3600
     
-    logger.info(f"Starting Copilot metrics collector with {execution_interval_hours}h interval")
-    
-    while True:
-        try:
-            logger.info(
-                f"Starting data processing for organizations: {Paras.organization_slugs}"
-            )
-            # Split Paras.organization_slugs and process each organization, remember to remove spaces after splitting
-            organization_slugs = Paras.organization_slugs.split(",")
-            for organization_slug in organization_slugs:
-                main(organization_slug.strip())
+    # Check if demo mode is enabled
+    if Paras.enable_demo_mode:
+        logger.info("Running in DEMO MODE")
+        
+        # Wait for Elasticsearch to be ready
+        import requests
+        es_url = Paras.elasticsearch_url
+        max_retries = 30
+        retry_delay = 5
+        
+        logger.info(f"Waiting for Elasticsearch at {es_url}...")
+        for i in range(max_retries):
+            try:
+                response = requests.get(f"{es_url}/_cluster/health")
+                if response.status_code == 200:
+                    logger.info("Elasticsearch is ready!")
+                    break
+            except requests.exceptions.ConnectionError:
+                pass
+            logger.info(f"Elasticsearch not ready, retrying in {retry_delay}s... ({i+1}/{max_retries})")
+            time.sleep(retry_delay)
+        else:
+            logger.error("Failed to connect to Elasticsearch after maximum retries")
+            exit(1)
+        
+        # Generate mock data once
+        success = run_demo_mode()
+        
+        if success:
+            logger.info("=" * 60)
+            logger.info("Demo mode setup complete!")
+            logger.info("The application will now idle. Press Ctrl+C to stop.")
+            logger.info("=" * 60)
             
-            logger.info("-----------------Finished Successfully-----------------")
-            logger.info(f"Sleeping for {execution_interval_hours} hour(s) until next run...")
-            time.sleep(execution_interval_seconds)
-            
-        except KeyboardInterrupt:
-            logger.info("Received shutdown signal, exiting gracefully...")
-            break
-        except Exception as e:
-            logger.error(f"An error occurred: {e}")
-            logger.error(f"Full traceback: {traceback.format_exc()}")
-            logger.info(f"Retrying in {execution_interval_hours} hour(s)...")
-            time.sleep(execution_interval_seconds)
+            # Keep the container running (idle)
+            try:
+                while True:
+                    time.sleep(3600)  # Sleep for 1 hour intervals
+            except KeyboardInterrupt:
+                logger.info("Received shutdown signal, exiting gracefully...")
+        else:
+            logger.error("Demo mode setup failed")
+            exit(1)
+    else:
+        # Normal mode - fetch real data from GitHub
+        logger.info(f"Starting Copilot metrics collector with {execution_interval_hours}h interval")
+        
+        while True:
+            try:
+                logger.info(
+                    f"Starting data processing for organizations: {Paras.organization_slugs}"
+                )
+                # Split Paras.organization_slugs and process each organization, remember to remove spaces after splitting
+                organization_slugs = Paras.organization_slugs.split(",")
+                for organization_slug in organization_slugs:
+                    main(organization_slug.strip())
+                
+                logger.info("-----------------Finished Successfully-----------------")
+                logger.info(f"Sleeping for {execution_interval_hours} hour(s) until next run...")
+                time.sleep(execution_interval_seconds)
+                
+            except KeyboardInterrupt:
+                logger.info("Received shutdown signal, exiting gracefully...")
+                break
+            except Exception as e:
+                logger.error(f"An error occurred: {e}")
+                logger.error(f"Full traceback: {traceback.format_exc()}")
+                logger.info(f"Retrying in {execution_interval_hours} hour(s)...")
+                time.sleep(execution_interval_seconds)
