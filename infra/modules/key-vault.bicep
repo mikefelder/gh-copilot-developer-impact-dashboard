@@ -7,6 +7,9 @@ param principalId string
 param secrets array
 param doRoleAssignments bool
 
+@description('Type of the principal - User for human users, ServicePrincipal for apps/managed identities')
+param principalType string = 'User'
+
 module vault 'br/public:avm/res/key-vault/vault:0.12.1' = {
   name: 'vault'
   params: {
@@ -20,7 +23,7 @@ module vault 'br/public:avm/res/key-vault/vault:0.12.1' = {
       }
       {
         principalId: principalId
-        principalType: 'User'
+        principalType: principalType
         roleDefinitionIdOrName: 'Key Vault Secrets Officer'
       }
     ] : []

@@ -102,6 +102,7 @@ module keyVault './modules/key-vault.bicep' = {
     tags: tags
     userAssignedManagedIdentityPrincipalId: identity.outputs.AZURE_RESOURCE_USER_ASSIGNED_IDENTITY_PRINCIPAL_ID
     principalId: principalId
+    principalType: 'ServicePrincipal'
     doRoleAssignments: doRoleAssignments
     secrets: [
       {
