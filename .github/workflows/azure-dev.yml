@@ -64,7 +64,7 @@ jobs:
           azd env set AZURE_RESOURCE_GROUP_NAME ${{ vars.AZURE_RESOURCE_GROUP }}
           azd env set GITHUB_ORGANIZATION_SLUGS ${{ vars.GH_ORGANIZATION_SLUGS }}
           azd env set ENABLE_DEMO_MODE ${{ vars.ENABLE_DEMO_MODE }}
-          azd env set AZURE_ROLE_ASSIGNMENTS false
+          azd env set AZURE_ROLE_ASSIGNMENTS true
 
       - name: Provision Infrastructure
         run: azd provision --no-prompt
