@@ -53,12 +53,13 @@ jobs:
           subscription-id: ${{ env.AZURE_SUBSCRIPTION_ID }}
 
       - name: Provision Infrastructure
-        run: azd provision --no-prompt
+        run: azd provision --no-prompt --resource-group "${{ env.AZURE_RESOURCE_GROUP }}"
         env:
           GITHUB_PAT: ${{ secrets.GH_PAT }}
 
       - name: Deploy Application
-        run: azd deploy --no-prompt
+        run: azd deploy --no-prompt --resource-group "${{ env.AZURE_RESOURCE_GROUP }}"
         env:
           GITHUB_PAT: ${{ secrets.GH_PAT }}
+
 
