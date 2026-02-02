@@ -465,7 +465,7 @@ var additionalGrafanaDefinition = {
   )
 }
 
-var grafanaPort = 80
+var grafanaPort = 3000
 
 module grafana './modules/container-app.bicep' = {
   name: 'grafanaDeployment'

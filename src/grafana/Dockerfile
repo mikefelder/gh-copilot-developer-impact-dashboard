@@ -2,13 +2,6 @@ FROM grafana/grafana-oss:11.4.4
 
 USER root
 
-# Install dependencies
-RUN apk update && \
-    apk add --no-cache libcap && \
-    rm -rf /var/cache/apk/*
-
-RUN setcap 'cap_net_bind_service=+ep' /usr/share/grafana/bin/grafana-server
-
 # Ensure Grafana data directory exists and has correct permissions
 RUN mkdir -p /var/lib/grafana && \
     chown -R grafana:root /var/lib/grafana && \
@@ -17,8 +10,8 @@ RUN mkdir -p /var/lib/grafana && \
 # Switch back to grafana user for runtime
 USER grafana
 
-# Expose the Grafana port
-EXPOSE 80
+# Expose the default Grafana port (non-privileged)
+EXPOSE 3000
 
-# Start Grafana
+# Start Grafana on default port 3000
 CMD ["grafana-server"]
