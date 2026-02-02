@@ -541,14 +541,14 @@ def import_static_dashboards(dashboards_dir, grafana_token):
     import pathlib
     
     if not os.path.exists(dashboards_dir):
-        logging.warning(f"Dashboards directory not found: {dashboards_dir}")
-        return
+        logging.info(f"Dashboards directory not found: {dashboards_dir}")
+        return False
     
     dashboard_files = list(pathlib.Path(dashboards_dir).glob("*.json"))
     
     if not dashboard_files:
-        logging.warning(f"No dashboard JSON files found in {dashboards_dir}")
-        return
+        logging.info(f"No dashboard JSON files found in {dashboards_dir}")
+        return False
     
     headers = {
         "Accept": "application/json",
@@ -556,6 +556,7 @@ def import_static_dashboards(dashboards_dir, grafana_token):
         "Authorization": f"Bearer {grafana_token}",
     }
     
+    imported_count = 0
     for dashboard_file in dashboard_files:
         try:
             with open(dashboard_file, 'r') as f:
@@ -588,11 +589,14 @@ def import_static_dashboards(dashboards_dir, grafana_token):
             
             if response.status_code == 200:
                 logging.info(f"Successfully imported dashboard: {dashboard_file.name}")
+                imported_count += 1
             else:
                 logging.error(f"Failed to import dashboard {dashboard_file.name}: {response.status_code} - {response.text}")
         
         except Exception as e:
             logging.error(f"Error importing dashboard {dashboard_file.name}: {e}")
+    
+    return imported_count > 0
 
 
 if __name__ == "__main__":
@@ -634,16 +638,17 @@ if __name__ == "__main__":
     # Try to import dashboards from provisioning directory
     # This handles both local (docker-compose) and deployed scenarios
     dashboard_sources = [
-        "/app/grafana-provisioning/dashboards",  # Where they're copied in the container
-        "/var/lib/grafana/dashboards",  # Where Grafana mounts them
-        "grafana-provisioning/dashboards",  # Relative path
-        "../../../grafana-provisioning/dashboards",  # Alternative relative path
+        "/var/lib/grafana/dashboards",  # Where Grafana mounts them in Azure
+        "grafana-provisioning/dashboards",  # Relative path from working directory
+        "../../../grafana-provisioning/dashboards",  # Relative path in container
     ]
     
+    dashboards_imported = False
     for dashboard_dir in dashboard_sources:
-        if os.path.exists(dashboard_dir):
-            logging.info(f"Found dashboards directory: {dashboard_dir}")
-            import_static_dashboards(dashboard_dir, grafana_token)
+        if import_static_dashboards(dashboard_dir, grafana_token):
+            logging.info(f"Successfully imported dashboards from: {dashboard_dir}")
+            dashboards_imported = True
             break
-    else:
-        logging.warning("No static dashboards directory found in expected locations")
+    
+    if not dashboards_imported:
+        logging.info("No static dashboards were found or imported. Only dynamically generated dashboards are available.")
