@@ -1435,6 +1435,16 @@
                 "size": "15"
               },
               "type": "terms"
+            },
+            {
+              "field": "day",
+              "id": "3",
+              "settings": {
+                "interval": "auto",
+                "min_doc_count": "0",
+                "timeZone": "utc"
+              },
+              "type": "date_histogram"
             }
           ],
           "datasource": {
@@ -1563,6 +1573,16 @@
                 "size": "15"
               },
               "type": "terms"
+            },
+            {
+              "field": "day",
+              "id": "3",
+              "settings": {
+                "interval": "auto",
+                "min_doc_count": "0",
+                "timeZone": "utc"
+              },
+              "type": "date_histogram"
             }
           ],
           "datasource": {
