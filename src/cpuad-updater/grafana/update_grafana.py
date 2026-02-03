@@ -6,10 +6,6 @@ import logging
 from datetime import datetime
 import json
 
-# # load environment variables from .env file
-# from dotenv import load_dotenv
-# load_dotenv()
-
 # Configure logging
 logging.basicConfig(
     level=logging.INFO,
@@ -274,38 +270,6 @@ def create_service_account(headers):
     return service_account_id
 
 
-def import_grafana_dashboard(dashboard_model, grafana_token):
-    """
-    Imports a Grafana dashboard using the Grafana API.
-
-    Args:
-        dashboard_model_path: Path to the dashboard model JSON file.
-    """
-    template_content = dashboard_model
-
-    headers = get_grafana_headers(grafana_token)
-
-    # write the template content to a file
-    with open("dashboard-template-test.json", "w") as f:
-        f.write(template_content)
-
-    result = requests.post(
-        f"{grafana_url.rstrip('/')}/api/dashboards/db",
-        headers=headers,
-        data=template_content,
-    )
-
-    if result.status_code != 200:
-        logging.error(
-            f"Failed to import dashboard: {result.status_code} - {result.text}"
-        )
-        raise ValueError(
-            f"Failed to import dashboard - {result.status_code} - {result.text}"
-        )
-    else:
-        logging.info("Dashboard imported successfully.")
-
-
 def add_grafana_data_sources(grafana_token, max_retries=3, retry_interval=5):
     headers = get_grafana_headers(grafana_token)
 
@@ -434,121 +398,6 @@ def add_grafana_data_sources(grafana_token, max_retries=3, retry_interval=5):
             raise ValueError(f"Data source verification failed: {ds['name']}")
 
 
-def generate_grafana_model(grafana_token):
-    data_source_names = [
-        "elasticsearch-breakdown",
-        "elasticsearch-breakdown-chat",
-        "elasticsearch-seat-assignments",
-        "elasticsearch-seat-info-settings",
-        "elasticsearch-total",
-        "elasticsearch-user-metrics",
-        "elasticsearch-user-metrics-top-by-day",
-        "elasticsearch-user-metrics-summary",
-        "elasticsearch-user-adoption",
-        "elasticsearch-developer-activity",
-    ]
-
-
-    script_dir = os.path.dirname(os.path.abspath(__file__))
-    default_template_path = os.path.join(script_dir, "dashboard-template.json")
-    model_output_path = f'dashboard-model-{datetime.today().strftime("%Y-%m-%d")}.json'
-    mapping_output_path = f'dashboard-model-data_sources_name_uid_mapping-{datetime.today().strftime("%Y-%m-%d")}.json'
-
-    template_path = default_template_path
-
-    headers = {
-        "Accept": "application/vnd.github+json",
-        "Authorization": f"Bearer {grafana_token}",
-        "X-GitHub-Api-Version": "2022-11-28",
-    }
-    grafana_url_stripted = grafana_url.rstrip("/")
-    response = requests.get(f"{grafana_url_stripted}/api/datasources", headers=headers)
-    time.sleep(1)  # Add a 1-second delay
-
-    if response.status_code != 200:
-        logging.error(
-            f"Failed to get data sources: {response.status_code} - {response.text}"
-        )
-        raise ValueError(
-            f"Failed to get data sources - {response.status_code} - {response.text}"
-        )
-
-    data_resources = response.json()
-
-    data_sources_name_uid_mapping = {}
-    for data_resource in data_resources:
-        name = data_resource["name"]
-        uid = data_resource["uid"]
-        data_sources_name_uid_mapping[name] = uid
-
-    with open(mapping_output_path, "w") as f:
-        json.dump(data_sources_name_uid_mapping, f, indent=4)
-
-    with open(template_path, "r") as template_file:
-        template_content = template_file.read()
-
-    for data_source_name in data_source_names:
-        uid = data_sources_name_uid_mapping.get(data_source_name)
-        if not uid:
-            logging.error(
-                f"Data source {data_source_name} not found, you must create it first"
-            )
-            break
-        uid_placeholder = f"{data_source_name}-uid"
-        template_content = template_content.replace(uid_placeholder, uid)
-
-    # load template content as json
-    try:
-        dashboard_obj = json.loads(template_content)
-        
-        # Check if this is a dashboard object (has "dashboard" key)
-        if "dashboard" in dashboard_obj:
-            # get the id
-            dashboard_id = dashboard_obj.get("dashboard", {}).get("id")
-            # get title
-            dashboard_title = dashboard_obj.get("dashboard", {}).get("title")
-            logging.info(f"Dashboard ID: {dashboard_id}")
-            logging.info(f"Dashboard Title: {dashboard_title}")
-
-            # change id to null
-            dashboard_obj["dashboard"]["id"] = None
-
-            # Ensure a stable dashboard UID so links work and imports overwrite.
-            dashboard_obj["dashboard"]["uid"] = dashboard_uid
-            
-            # Construct the proper API payload for Grafana
-            # The API expects: {"dashboard": {...}, "folderId": 0, "overwrite": true}
-            # NOT the full export format with "meta"
-            api_payload = {
-                "dashboard": dashboard_obj["dashboard"],
-                "folderId": 0,
-                "overwrite": True,
-                "message": "Dashboard created by cpuad-updater"
-            }
-            
-            # updated template content
-            template_content = json.dumps(api_payload, indent=4)
-        else:
-            # Old format - dashboard content directly
-            logging.info("Using legacy dashboard format")
-            dashboard_id = dashboard_obj.get("id")
-            dashboard_title = dashboard_obj.get("title")
-            logging.info(f"Dashboard ID: {dashboard_id}")
-            logging.info(f"Dashboard Title: {dashboard_title}")
-            
-            dashboard_obj["id"] = None
-            template_content = json.dumps(dashboard_obj, indent=4)
-
-        with open(model_output_path, "w") as output_file:
-            output_file.write(template_content)
-
-        return template_content
-
-    except json.JSONDecodeError as e:
-        logging.error(f"Failed to load template content as JSON: {e}")
-        raise ValueError("Failed to load template content as JSON")
-
-
 def import_static_dashboards(dashboards_dir, grafana_token):
     """
     Imports all dashboard JSON files from a directory.
@@ -640,25 +489,9 @@ if __name__ == "__main__":
 
     logging.info("Successfully added Grafana data sources.")
 
-    logging.info("Generating Grafana dashboard model...")
-
-    python_script_path = "gen_grafana_model.py"
-
-    dashboard_model = generate_grafana_model(grafana_token=grafana_token)
-
-    logging.info("Successfully generated Grafana dashboard model.")
-
-    logging.info("Importing Grafana dashboard...")
-
-    import_grafana_dashboard(
-        dashboard_model=dashboard_model, grafana_token=grafana_token
-    )
-
-    logging.info("Successfully imported Grafana dashboard.")
-    
     logging.info("Importing static dashboards from provisioning directory...")
     
-    # Try to import dashboards from provisioning directory
+    # Import dashboards from provisioning directory
     # This handles both local (docker-compose) and deployed scenarios
     dashboard_sources = [
         "/app/grafana-provisioning/dashboards",  # Where they're copied in the container image
@@ -675,4 +508,5 @@ if __name__ == "__main__":
             break
     
     if not dashboards_imported:
-        logging.info("No static dashboards were found or imported. Only dynamically generated dashboards are available.")
+        logging.warning("No static dashboards were found or imported.")
+
