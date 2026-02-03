@@ -47,17 +47,19 @@ jobName="$AZURE_RESOURCE_UPDATE_GRAFANA_NAME"
 loginServer="$AZURE_CONTAINER_REGISTRY_ENDPOINT"
 tag="azd-$(date +'%Y%m%d%H%M%S')"
 image="$AZURE_CONTAINER_REGISTRY_ENDPOINT/copilot-usage-advanced-dashboard/update-grafana-job:$tag"
-projectDir="$(realpath "$(dirname "$0")/../src/cpuad-updater/grafana")"
+dockerfilePath="src/cpuad-updater/grafana/Dockerfile"
+projectRoot="$(realpath "$(dirname "$0")/..")"
 
 echo "Resource Group: $resourceGroup"
 echo "Environment: $environment"
 echo "Job Name: $jobName"
 echo "Login Server: $loginServer"
 echo "Image: $image"
-echo "Project Directory: $projectDir"
+echo "Project Root: $projectRoot"
+echo "Dockerfile: $dockerfilePath"
 
 echo "Building and pushing Docker image using Azure Container Registry tasks..."
-az acr build --registry "$loginServer" --image "$image" --file "$projectDir/Dockerfile" "$projectDir"
+az acr build --registry "$loginServer" --image "$image" --file "$dockerfilePath" "$projectRoot"
 if [ $? -ne 0 ]; then
     echo "ACR build failed"
     exit 1

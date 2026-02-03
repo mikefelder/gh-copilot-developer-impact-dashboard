@@ -49,7 +49,8 @@ $registryName = $($env:AZURE_CONTAINER_REGISTRY_NAME)
 $tag = "azd"
 $tag += "-$(Get-Date -Format 'yyyyMMddHHmmss')"
 $image = "$($env:AZURE_CONTAINER_REGISTRY_ENDPOINT)/copilot-usage-advanced-dashboard/update-grafana-job:$($tag)"
-$projectDir = Resolve-Path "$PSScriptRoot/../src/cpuad-updater/grafana"
+$dockerfilePath = "src/cpuad-updater/grafana/Dockerfile"
+$projectRoot = Resolve-Path "$PSScriptRoot/.."
 
 Write-Host "Resource Group: $resourceGroup" -ForegroundColor Green
 Write-Host "Environment: $environment" -ForegroundColor Green
@@ -57,10 +58,11 @@ Write-Host "Job Name: $jobName" -ForegroundColor Green
 Write-Host "Login Server: $loginServer" -ForegroundColor Green
 Write-Host "Registry Name: $registryName" -ForegroundColor Green
 Write-Host "Image: $image" -ForegroundColor Green
-Write-Host "Project Directory: $projectDir" -ForegroundColor Green
+Write-Host "Project Root: $projectRoot" -ForegroundColor Green
+Write-Host "Dockerfile: $dockerfilePath" -ForegroundColor Green
 
 Write-Host "Building and pushing Docker image using Azure Container Registry tasks..." -ForegroundColor Green
-az acr build --registry $registryName --image $image --file "$projectDir/Dockerfile" "$projectDir"
+az acr build --registry $registryName --image $image --file "$dockerfilePath" "$projectRoot"
 if ($LASTEXITCODE -ne 0) {
     Write-Host "ACR build failed" -ForegroundColor Red
     exit $LASTEXITCODE
