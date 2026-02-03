@@ -1,6 +1,8 @@
 # Copilot Usage Advanced Dashboard Tutorial
 
 
+> ⚠️**Info**: This project's infrastructure and pipelines are being adapted to be as turnkey as possible, with the goal to require as minimal configuration as possible to deploy to Azure and view insights.
+
 > ⚠️**Disclaimer**: This project is open sourced to solve problems that are critical to some users, and the functions provided may not be natively provided by GitHub Copilot. Therefore the contents,  opinions and views expressed in this project are solely mine do not necessarly refect the views of my employer, These are my personal notes based on myunderstanding of the code and trial deployments to GitHub Copilot. If anything is wrong with this article, please let me know through the [issues](https://github.com/satomic/copilot-usage-advanced-dashboard/issues/new). l appreciate your help in correcting my understanding.
 
 > ✅**Risk Warning**: This project uses the standard Copilot REST API to obtain data, aggregate data, and visualize it, without any potential risks.
