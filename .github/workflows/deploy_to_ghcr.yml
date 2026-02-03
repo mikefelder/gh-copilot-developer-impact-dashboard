@@ -38,4 +38,5 @@ jobs:
     uses: ./.github/workflows/template_ghcr.yml
     with:
         APP_NAME: grafana-updater
-        CONTEXT: ./src/cpuad-updater/grafana
+        CONTEXT: .
+        DOCKERFILE: ./src/cpuad-updater/grafana/Dockerfile

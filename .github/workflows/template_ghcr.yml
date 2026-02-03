@@ -12,6 +12,10 @@
           CONTEXT:
             required: true
             type: string
+          DOCKERFILE:
+            required: false
+            type: string
+            default: ''
     
     # ------------------------------------------------------------------------------------------------------------------------
         outputs:
@@ -61,6 +65,7 @@
             uses: docker/build-push-action@v5
             with:
                 context: ${{ inputs.CONTEXT  }}
+                file: ${{ inputs.DOCKERFILE || format('{0}/Dockerfile', inputs.CONTEXT) }}
                 tags: ${{ steps.meta.outputs.tags }}
                 labels: ${{ steps.meta.outputs.labels }}
                 push: true
