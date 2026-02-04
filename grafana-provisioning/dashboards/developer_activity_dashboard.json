@@ -55,12 +55,37 @@
   "links": [],
   "panels": [
     {
+      "datasource": {
+        "type": "datasource",
+        "uid": "-- Grafana --"
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 999,
+      "options": {
+        "code": {
+          "language": "plaintext",
+          "showLineNumbers": false,
+          "showMiniMap": false
+        },
+        "content": "# GitHub Copilot Impact Dashboard\n\nSee how Copilot adoption is affecting your team's productivity by comparing usage metrics with actual developer activity from GitHub.\n\n**Quick tips:**\n- Filter by team, org, or seniority at the top\n- Change the time range to compare different periods\n- Higher acceptance rates mean better suggestion quality\n- Look for patterns between Copilot usage and commit/PR activity\n\nData updates every hour. Questions? Reach out to your platform team.",
+        "mode": "markdown"
+      },
+      "pluginVersion": "11.4.0",
+      "transparent": true,
+      "type": "text"
+    },
+    {
       "collapsed": false,
       "gridPos": {
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 0
+        "y": 5
       },
       "id": 100,
       "panels": [],
