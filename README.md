@@ -41,7 +41,51 @@ docker-compose up -d
 
 Open Grafana at **http://localhost:8080** (username: `admin`, password: `copilot`) and the dashboard will be ready to go. The system automatically starts Elasticsearch, sets up Grafana with datasources, loads the dashboard, and begins fetching data from GitHub every hour.
 
-**Want to try it without a GitHub token?** Set `ENABLE_DEMO_MODE=true` in your environment to generate 5 months of realistic mock data with 25 developers across 5 teams. Great for exploring the dashboard before connecting your real organization.
+---
+
+## Demo Mode
+
+Want to explore the dashboard without connecting to a real GitHub organization? Demo mode generates realistic mock data so you can see exactly what the dashboard looks like with a full dataset.
+
+**Quick start with demo mode:**
+
+```bash
+git clone https://github.com/satomic/copilot-usage-advanced-dashboard.git
+cd copilot-usage-advanced-dashboard
+ENABLE_DEMO_MODE=true docker-compose up -d
+```
+
+Or add it to your `.env` file:
+```env
+ENABLE_DEMO_MODE=true
+```
+
+**What you get:**
+
+Demo mode automatically generates 5 months of realistic data based on actual GitHub research into Copilot productivity gains:
+
+- **25 developers** across 5 teams (Platform, Frontend, Backend, Data, Mobile)
+- **Different seniority levels** - junior, mid-level, senior, staff, and principal engineers
+- **Realistic productivity patterns** - 20-30% productivity improvements after Copilot adoption
+- **Gradual ramp-up period** - 8-week adoption curve as developers learn to use Copilot effectively
+- **Varied usage patterns** - power users, regular users, and occasional users
+- **Research-based metrics** - 26-30% acceptance rates, typical chat/agent usage patterns
+- **Before/after comparison** - Copilot adoption date set to 10 weeks ago so you can see the impact
+- **Complete history** - 150 days of developer activity and Copilot metrics
+
+The mock data includes all the same metrics you'd see with real data:
+- Commits, pull requests, code reviews, issues
+- Copilot suggestions, acceptances, chat interactions
+- Team breakdowns and individual user activity
+- Acceptance rates and productivity trends
+
+This is perfect for:
+- Testing the dashboard before deploying to production
+- Demoing the solution to stakeholders
+- Understanding what metrics are available
+- Exploring the dashboard features without needing GitHub access
+
+**Note:** Demo mode skips GitHub API calls entirely, so you don't need a GitHub token or organization access.
 
 ---
 
@@ -85,7 +129,7 @@ All of this gets stored in Elasticsearch (not limited to just 28 days like the G
 
 **Visual analysis** - Time series charts showing trends over time, leaderboards for top contributors and Copilot users, team breakdowns by seniority and contribution type, acceptance rate tracking, and activity heatmaps.
 
-**Demo mode** - Generate realistic synthetic data to test the dashboard without connecting to a real GitHub org. Includes research-based productivity patterns (20-30% gains over an 8-week ramp-up period).
+**Demo mode with realistic data** - Generate 5 months of research-based synthetic data representing 25 developers across 5 teams. Includes realistic Copilot adoption patterns (20-30% productivity gains over an 8-week ramp-up), varied usage by seniority level, and before/after metrics for impact analysis. Perfect for testing or demos without GitHub access.
 
 ---
 
