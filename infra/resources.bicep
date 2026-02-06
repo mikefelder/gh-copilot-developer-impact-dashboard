@@ -43,6 +43,12 @@ param doRoleAssignments bool = true
 
 param authentication object
 
+@description('GitHub repository in format owner/repo for federated identity credential')
+param githubRepository string = 'mikefelder/gh-copilot-developer-impact-dashboard'
+
+@description('GitHub environment name for federated identity credential')
+param githubEnvironment string = 'demo'
+
 var abbrs = loadJsonContent('./abbreviations.json')
 var resourceToken = uniqueString(subscription().id, resourceGroup().id, location)
 var elasticSearchFileShareName = 'elastic-search'
@@ -78,6 +84,8 @@ module identity './modules/user-assigned-managed-identity.bicep' = {
     location: location
     abbrs: abbrs
     resourceToken: resourceToken
+    githubRepository: githubRepository
+    githubEnvironment: githubEnvironment
   }
 }
 
