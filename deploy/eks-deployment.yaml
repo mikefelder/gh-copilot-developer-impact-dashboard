@@ -21,7 +21,7 @@ spec:
         fsGroup: 1000
       containers:
         - name: elasticsearch
-          image: ghcr.io/satomic/copilot-usage-advanced-dashboard/elastic-search:main
+          image: ghcr.io/satomic/gh-copilot-developer-impact-dashboard/elastic-search:main
           ports:
             - containerPort: 9200
           volumeMounts:
@@ -88,7 +88,7 @@ spec:
             fsGroup: 1000
           containers:
             - name: cpuad-updater
-              image: ghcr.io/satomic/copilot-usage-advanced-dashboard/cpuad-updater:main
+              image: ghcr.io/satomic/gh-copilot-developer-impact-dashboard/cpuad-updater:main
               envFrom:
                 - secretRef:
                     name: github-pat
@@ -139,7 +139,7 @@ spec:
     spec:
       containers:
         - name: grafana
-          image: ghcr.io/satomic/copilot-usage-advanced-dashboard/grafana:main
+          image: ghcr.io/satomic/gh-copilot-developer-impact-dashboard/grafana:main
           ports:
             - containerPort: 80
           envFrom:
@@ -231,7 +231,7 @@ spec:
     spec:
       containers:
         - name: update-grafana
-          image: ghcr.io/satomic/copilot-usage-advanced-dashboard/grafana-updater:main
+          image: ghcr.io/satomic/gh-copilot-developer-impact-dashboard/grafana-updater:main
           envFrom:
             - secretRef:
                 name: grafana-credentials

@@ -48,7 +48,7 @@ $loginServer = $($env:AZURE_CONTAINER_REGISTRY_ENDPOINT)
 $registryName = $($env:AZURE_CONTAINER_REGISTRY_NAME)
 $tag = "azd"
 $tag += "-$(Get-Date -Format 'yyyyMMddHHmmss')"
-$image = "$($env:AZURE_CONTAINER_REGISTRY_ENDPOINT)/copilot-usage-advanced-dashboard/update-grafana-job:$($tag)"
+$image = "$($env:AZURE_CONTAINER_REGISTRY_ENDPOINT)/gh-copilot-developer-impact-dashboard/update-grafana-job:$($tag)"
 $dockerfilePath = "src/cpuad-updater/grafana/Dockerfile"
 $projectRoot = Resolve-Path "$PSScriptRoot/.."
 

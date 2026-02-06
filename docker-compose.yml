@@ -33,7 +33,6 @@ services:
       - grafana:/var/lib/grafana
       - ./grafana-provisioning/dashboards:/var/lib/grafana/dashboards
       - ./grafana-provisioning/dashboard.yaml:/etc/grafana/provisioning/dashboards/dashboard.yaml
-      - ./user_advance_metrics_dashboard.json:/var/lib/grafana/dashboards/user_advance_metrics_dashboard.json
     environment:
       GF_LOG_LEVEL: debug
       GF_SERVER_HTTP_PORT: 3000

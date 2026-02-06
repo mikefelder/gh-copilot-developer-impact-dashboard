@@ -1,4 +1,4 @@
-name: copilot-usage-advanced-dashboard
+name: gh-copilot-developer-impact-dashboard
 services:
     elastic-search:
         project: src/elasticsearch

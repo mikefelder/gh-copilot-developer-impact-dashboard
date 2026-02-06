@@ -48,7 +48,7 @@ $loginServer = $($env:AZURE_CONTAINER_REGISTRY_ENDPOINT)
 $registryName = $($env:AZURE_CONTAINER_REGISTRY_NAME)
 $tag = "azd"
 $tag += "-$(Get-Date -Format 'yyyyMMddHHmmss')"
-$image = "$($env:AZURE_CONTAINER_REGISTRY_ENDPOINT)/copilot-usage-advanced-dashboard/cpuad-updater-job:$($tag)"
+$image = "$($env:AZURE_CONTAINER_REGISTRY_ENDPOINT)/gh-copilot-developer-impact-dashboard/cpuad-updater-job:$($tag)"
 
 Write-Host "Resource Group: $resourceGroup" -ForegroundColor Green
 Write-Host "Environment: $environment" -ForegroundColor Green
@@ -62,7 +62,7 @@ $projectDir = Resolve-Path "$PSScriptRoot/../src/cpuad-updater"
 Write-Host "Project Directory: $projectDir" -ForegroundColor Green
 
 Write-Host "Starting ACR Task to build and push Docker image..." -ForegroundColor Green
-az acr build --registry $registryName --image "copilot-usage-advanced-dashboard/cpuad-updater-job:$tag" --file "$projectDir/Dockerfile" "$projectDir"
+az acr build --registry $registryName --image "gh-copilot-developer-impact-dashboard/cpuad-updater-job:$tag" --file "$projectDir/Dockerfile" "$projectDir"
 if ($LASTEXITCODE -ne 0) {
     Write-Host "ACR Task failed" -ForegroundColor Red
     exit $LASTEXITCODE

@@ -48,7 +48,7 @@ environment="$AZURE_CONTAINER_APPS_ENVIRONMENT_NAME"
 jobName="$AZURE_RESOURCE_CPUAD_UPDATER_NAME"
 loginServer="$AZURE_CONTAINER_REGISTRY_ENDPOINT"
 tag="azd-$(date +'%Y%m%d%H%M%S')"
-image="$AZURE_CONTAINER_REGISTRY_ENDPOINT/copilot-usage-advanced-dashboard/cpuad-updater-job:$tag"
+image="$AZURE_CONTAINER_REGISTRY_ENDPOINT/gh-copilot-developer-impact-dashboard/cpuad-updater-job:$tag"
 projectDir="$(realpath "$(dirname "$0")/../src/cpuad-updater")"
 
 # Display variables
@@ -61,7 +61,7 @@ echo "Project Directory: $projectDir"
 
 # Build and push Docker image
 echo "Starting ACR Task to build and push Docker image..."
-az acr build --registry "$loginServer" --image "copilot-usage-advanced-dashboard/cpuad-updater-job:$tag" --file "$projectDir/Dockerfile" "$projectDir"
+az acr build --registry "$loginServer" --image "gh-copilot-developer-impact-dashboard/cpuad-updater-job:$tag" --file "$projectDir/Dockerfile" "$projectDir"
 if [[ $? -ne 0 ]]; then
     echo "ACR Task failed"
     exit 1

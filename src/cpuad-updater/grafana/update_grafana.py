@@ -14,7 +14,7 @@ logging.basicConfig(
 )
 
 elasticsearch_url = os.getenv("ELASTICSEARCH_URL")
-dashboard_uid = os.getenv("GRAFANA_DASHBOARD_UID", "copilot-usage-advanced-dashboard")
+dashboard_uid = os.getenv("GRAFANA_DASHBOARD_UID", "developer-activity-dashboard")
 
 if not elasticsearch_url:
     raise ValueError("Please set the ELASTICSEARCH_URL environment variable")

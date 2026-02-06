@@ -8,10 +8,6 @@ A rapidly deployable, containerized solution that allows organizations to visual
 
 Get up and running in about 5 minutes.
 
-## Quick Start
-
-Get up and running in about 5 minutes.
-
 **You'll need:**
 - Docker Desktop ([grab it here](https://www.docker.com/products/docker-desktop))
 - A GitHub Personal Access Token with `manage_billing:copilot` scope ([create one here](https://github.com/settings/tokens))
@@ -22,8 +18,8 @@ Get up and running in about 5 minutes.
 Clone the repo and configure your environment:
 
 ```bash
-git clone https://github.com/satomic/copilot-usage-advanced-dashboard.git
-cd copilot-usage-advanced-dashboard
+git clone https://github.com/satomic/gh-copilot-developer-impact-dashboard.git
+cd gh-copilot-developer-impact-dashboard
 cp .env.template .env
 # Edit .env with your GitHub PAT and org name
 ```
@@ -50,8 +46,8 @@ Want to explore the dashboard without connecting to a real GitHub organization? 
 **Quick start with demo mode:**
 
 ```bash
-git clone https://github.com/satomic/copilot-usage-advanced-dashboard.git
-cd copilot-usage-advanced-dashboard
+git clone https://github.com/satomic/gh-copilot-developer-impact-dashboard.git
+cd gh-copilot-developer-impact-dashboard
 ENABLE_DEMO_MODE=true docker-compose up -d
 ```
 
@@ -137,10 +133,6 @@ All of this gets stored in Elasticsearch (not limited to just 28 days like the G
 
 The main view gives you a comprehensive look at how Copilot adoption correlates with developer productivity.
 
-## The Dashboard
-
-The main view gives you a comprehensive look at how Copilot adoption correlates with developer productivity.
-
 **Summary metrics** show total commits, PRs opened, Copilot interactions, and acceptance rates across your selected time range. These give you the high-level view at a glance.
 
 **Team analysis** breaks down commits by team on a weekly basis, shows total contributions (commits + PRs + reviews) by team and by seniority level. This helps you spot which teams are benefiting most from Copilot and whether there are patterns by experience level.
@@ -221,7 +213,7 @@ Built with Python 3.11+, Elasticsearch 8.x, and Grafana 11.x, all containerized 
 
 ## Getting Help
 
-Check the [docs](docs/) folder for detailed guides. Report issues or request features via [GitHub Issues](https://github.com/satomic/copilot-usage-advanced-dashboard/issues).
+Check the [docs](docs/) folder for detailed guides. Report issues or request features via [GitHub Issues](https://github.com/satomic/gh-copilot-developer-impact-dashboard/issues).
 
 Deployment guides:
 - [Azure Container Apps](deploy/azure-container-apps.md)

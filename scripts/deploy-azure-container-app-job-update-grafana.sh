@@ -46,7 +46,7 @@ environment="$AZURE_CONTAINER_APPS_ENVIRONMENT_NAME"
 jobName="$AZURE_RESOURCE_UPDATE_GRAFANA_NAME"
 loginServer="$AZURE_CONTAINER_REGISTRY_ENDPOINT"
 tag="azd-$(date +'%Y%m%d%H%M%S')"
-image="$AZURE_CONTAINER_REGISTRY_ENDPOINT/copilot-usage-advanced-dashboard/update-grafana-job:$tag"
+image="$AZURE_CONTAINER_REGISTRY_ENDPOINT/gh-copilot-developer-impact-dashboard/update-grafana-job:$tag"
 dockerfilePath="src/cpuad-updater/grafana/Dockerfile"
 projectRoot="$(realpath "$(dirname "$0")/..")"
 

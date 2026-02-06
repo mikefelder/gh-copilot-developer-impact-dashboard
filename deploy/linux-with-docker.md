@@ -90,21 +90,21 @@ Server:
 
 ## Using existing images
 
-Docker images for all app components are available in [GitHub container registry](https://github.com/satomic?tab=packages&repo_name=copilot-usage-advanced-dashboard):
+Docker images for all app components are available in [GitHub container registry](https://github.com/satomic?tab=packages&repo_name=gh-copilot-developer-impact-dashboard):
 
-- **Elastic Search** - `docker pull ghcr.io/satomic/copilot-usage-advanced-dashboard/elastic-search:main`
-- **grafana** - `docker pull ghcr.io/satomic/copilot-usage-advanced-dashboard/grafana:main`
-- **grafana-updater** - `docker pull ghcr.io/satomic/copilot-usage-advanced-dashboard/grafana-updater:main`
-- **cpuad-updater** - `docker pull ghcr.io/satomic/copilot-usage-advanced-dashboard/cpuad-updater:main`
+- **Elastic Search** - `docker pull ghcr.io/satomic/gh-copilot-developer-impact-dashboard/elastic-search:main`
+- **grafana** - `docker pull ghcr.io/satomic/gh-copilot-developer-impact-dashboard/grafana:main`
+- **grafana-updater** - `docker pull ghcr.io/satomic/gh-copilot-developer-impact-dashboard/grafana-updater:main`
+- **cpuad-updater** - `docker pull ghcr.io/satomic/gh-copilot-developer-impact-dashboard/cpuad-updater:main`
 
 ## Download source code
 
-Put all the work in the `/srv` directory, click [download zip archive](https://github.com/satomic/copilot-usage-advanced-dashboard/archive/refs/heads/main.zip), unzip and rename the folder to `copilot-usage-advanced-dashboard`, or directly `git clone`
+Put all the work in the `/srv` directory, click [download zip archive](https://github.com/satomic/gh-copilot-developer-impact-dashboard/archive/refs/heads/main.zip), unzip and rename the folder to `gh-copilot-developer-impact-dashboard`, or directly `git clone`
 
 ```bash
 cd /srv
-git clone https://github.com/satomic/copilot-usage-advanced-dashboard.git
-cd copilot-usage-advanced-dashboard/src/cpuad-updater
+git clone https://github.com/satomic/gh-copilot-developer-impact-dashboard.git
+cd gh-copilot-developer-impact-dashboard/src/cpuad-updater
 
 ```
 
@@ -200,7 +200,7 @@ drwxr-xr-x 2 root root  4096 May 13 10:00 grafana
 
 1. Confirm that you are in the correct path
    ```bash
-   cd /srv/copilot-usage-advanced-dashboard/src/cpuad-updater
+   cd /srv/gh-copilot-developer-impact-dashboard/src/cpuad-updater
    ```
 2. Execute the script and create an index
    ```bash
@@ -280,7 +280,7 @@ drwxr-xr-x 2 root root  4096 May 13 10:00 grafana
 
 1. Confirm that you are in the correct path
    ```bash
-   cd /srv/copilot-usage-advanced-dashboard/src/cpuad-updater
+   cd /srv/gh-copilot-developer-impact-dashboard/src/cpuad-updater
    ```
 2. run script, add data sources
    ```bash

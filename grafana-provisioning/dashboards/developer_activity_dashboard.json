@@ -1432,19 +1432,9 @@
                 "min_doc_count": "1",
                 "order": "desc",
                 "orderBy": "1",
-                "size": "15"
+                "size": "10"
               },
               "type": "terms"
-            },
-            {
-              "field": "day",
-              "id": "3",
-              "settings": {
-                "interval": "auto",
-                "min_doc_count": "0",
-                "timeZone": "utc"
-              },
-              "type": "date_histogram"
             }
           ],
           "datasource": {
@@ -1570,19 +1560,9 @@
                 "min_doc_count": "1",
                 "order": "desc",
                 "orderBy": "1",
-                "size": "15"
+                "size": "10"
               },
               "type": "terms"
-            },
-            {
-              "field": "day",
-              "id": "3",
-              "settings": {
-                "interval": "auto",
-                "min_doc_count": "0",
-                "timeZone": "utc"
-              },
-              "type": "date_histogram"
             }
           ],
           "datasource": {

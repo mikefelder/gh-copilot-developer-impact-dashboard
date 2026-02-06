@@ -462,7 +462,7 @@ If issues persist:
    curl -X GET "http://localhost:9200/_cat/indices?v" > indexes.txt
    ```
 
-2. **Check GitHub Issues**: https://github.com/vanchaudhary/copilot-usage-advanced-dashboard/issues
+2. **Check GitHub Issues**: https://github.com/vanchaudhary/gh-copilot-developer-impact-dashboard/issues
 
 3. **Contact Support**: Provide logs and diagnostic information
 
@@ -644,7 +644,7 @@ After successful deployment:
 ## Support
 
 For questions or issues:
-- **GitHub Issues**: https://github.com/vanchaudhary/copilot-usage-advanced-dashboard/issues
+- **GitHub Issues**: https://github.com/vanchaudhary/gh-copilot-developer-impact-dashboard/issues
 - **Documentation**: See `docs/` folder for additional guides
 - **Demo Guide**: See generated demo documentation for panel explanations
 

@@ -84,6 +84,6 @@ The Grafana dashboard only uses the `Viewer` role. This means all users that can
    - **Certificates & secrets->Federated credentials**: Add a new federated credential with the following settings:
      - **Federated credential scenario**: Managed Identity
      - **Select managed identity**: Select the managed identity created for the Container App (look in the Azure portal under the Container App's Identity section to find the name of the managed identity).
-     - **Name**: `copilot-usage-advanced-dashboard` (or something similar)
+     - **Name**: `gh-copilot-developer-impact-dashboard` (or something similar)
 
 1. After the deployment is complete, you can access the application using the URL provided in the output.

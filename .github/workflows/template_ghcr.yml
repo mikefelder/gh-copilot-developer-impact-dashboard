@@ -51,7 +51,7 @@
                 images: |
                     ghcr.io/${{ github.repository }}/${{ inputs.APP_NAME  }}
                 labels: |
-                    org.opencontainers.image.title=copilot-usage-advanced-dashboard-${{ inputs.APP_NAME  }}
+                    org.opencontainers.image.title=gh-copilot-developer-impact-dashboard-${{ inputs.APP_NAME  }}
                     org.opencontainers.image.description=Metrics viewer for GitHub Copilot usage ${{ inputs.APP_NAME  }}
                     org.opencontainers.image.source=${{ github.repository }}
                 tags: |

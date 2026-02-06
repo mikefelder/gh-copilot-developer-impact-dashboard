@@ -16,8 +16,8 @@ Deploy the entire dashboard stack locally or on a private Linux host to prove fu
 ### Setup Steps
 1. Clone repository and enter directory:
    ```powershell
-   git clone https://github.com/satomic/copilot-usage-advanced-dashboard.git
-   cd copilot-usage-advanced-dashboard
+   git clone https://github.com/satomic/gh-copilot-developer-impact-dashboard.git
+   cd gh-copilot-developer-impact-dashboard
    ```
 2. Copy environment template and edit:
    ```powershell
@@ -64,8 +64,8 @@ Deploy the dashboard to Azure Container Apps for managed hosting, autoscaling, a
 ### Setup Steps
 1. Clone repo and initialize environment:
    ```powershell
-   git clone https://github.com/satomic/copilot-usage-advanced-dashboard.git
-   cd copilot-usage-advanced-dashboard
+   git clone https://github.com/satomic/gh-copilot-developer-impact-dashboard.git
+   cd gh-copilot-developer-impact-dashboard
    az login
    azd auth login
    azd env new copilot-dashboard-prod
