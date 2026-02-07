@@ -30,6 +30,9 @@ param principalId string
 
 param userPrincipalId string = ''
 
+@description('Type of the principal - User for human users, ServicePrincipal for apps/managed identities')
+param principalType string = 'ServicePrincipal'
+
 @description('If true, assign permissions to the principalId. If false, do not assign permissions to the principalId. This is useful for testing purposes or when you want to manage permissions manually.')
 param assignPermissionsToPrincipal bool = true
 
@@ -85,6 +88,7 @@ module resources 'resources.bicep' = {
     location: location
     tags: tags
     principalId: empty(userPrincipalId) ? principalId : userPrincipalId
+    principalType: principalType
     updateGrafanaExists: updateGrafanaExists
     updateGrafanaDefinition: updateGrafanaDefinition
     cpuAdUpdaterExists: cpuAdUpdaterExists

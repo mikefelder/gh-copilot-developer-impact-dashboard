@@ -23,6 +23,9 @@ param grafanaDefinition object
 @description('Id of the user or app to assign application roles')
 param principalId string
 
+@description('Type of the principal - User for human users, ServicePrincipal for apps/managed identities')
+param principalType string = 'ServicePrincipal'
+
 @secure()
 param grafanaUsername string
 
@@ -97,6 +100,7 @@ module containerRegistry './modules/container-registry.bicep' = {
     abbrs: abbrs
     resourceToken: resourceToken
     principalId: identity.outputs.AZURE_RESOURCE_USER_ASSIGNED_IDENTITY_PRINCIPAL_ID
+    principalType: 'ServicePrincipal'
     doRoleAssignments: doRoleAssignments
   }
 }
@@ -110,6 +114,7 @@ module keyVault './modules/key-vault.bicep' = {
     tags: tags
     userAssignedManagedIdentityPrincipalId: identity.outputs.AZURE_RESOURCE_USER_ASSIGNED_IDENTITY_PRINCIPAL_ID
     principalId: principalId
+    principalType: principalType
     doRoleAssignments: doRoleAssignments
     secrets: [
       {
