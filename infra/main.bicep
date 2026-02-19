@@ -43,6 +43,12 @@ param grafanaUsername string = ''
 param grafanaPassword string = ''
 
 @secure()
+param demoUserUsername string = ''
+
+@secure()
+param demoUserPassword string = ''
+
+@secure()
 @description('GitHub Personal Access Token (PAT) for authentication with permissions `manage_billing:copilot`, `read:enterprise`, `read:org`')
 param githubPat string
 
@@ -101,6 +107,8 @@ module resources 'resources.bicep' = {
     grafanaImageName: grafanaImageName
     grafanaPassword: grafanaPassword
     grafanaUsername: grafanaUsername
+    demoUserUsername: demoUserUsername
+    demoUserPassword: demoUserPassword
     githubPat: githubPat
     githubOrganizationSlugs: githubOrganizationSlugs
     enableDemoMode: enableDemoMode

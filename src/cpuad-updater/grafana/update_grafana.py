@@ -35,6 +35,10 @@ if not grafana_api_token_env:
     if not grafana_password:
         raise ValueError("Please set the GRAFANA_PASSWORD environment variable")
 
+# Demo user credentials - can be configured via environment or use defaults
+demo_username = os.getenv("DEMO_USER_USERNAME", "demo-user")
+demo_password = os.getenv("DEMO_USER_PASSWORD", "dem0-passw0rd")
+
 service_account_name = "sa-for-cpuad"
 
 
@@ -398,6 +402,69 @@ def add_grafana_data_sources(grafana_token, max_retries=3, retry_interval=5):
             raise ValueError(f"Data source verification failed: {ds['name']}")
 
 
+def create_demo_user(grafana_token=None):
+    """
+    Creates a demo user with read-only (Viewer) access.
+    The user will have access to all dashboards in read-only mode.
+    
+    Credentials are read from environment variables:
+    - DEMO_USER_USERNAME (default: demo-user)
+    - DEMO_USER_PASSWORD (default: dem0-passw0rd)
+    """
+    headers = get_grafana_headers(grafana_token)
+    
+    logging.info(f"Creating/updating demo user: {demo_username}")
+    
+    # Check if user already exists
+    check_resp = safe_request(
+        "GET",
+        f"{grafana_url.rstrip('/')}/api/users/lookup?loginOrEmail={demo_username}",
+        headers=headers
+    )
+    
+    if check_resp.status_code == 200:
+        logging.info(f"User {demo_username} already exists. Updating password...")
+        user_data = check_resp.json()
+        user_id = user_data.get("id")
+        
+        # Update password
+        update_resp = safe_request(
+            "PUT",
+            f"{grafana_url.rstrip('/')}/api/admin/users/{user_id}/password",
+            headers=headers,
+            json={"password": demo_password}
+        )
+        
+        if update_resp.status_code == 200:
+            logging.info(f"Password updated for user {demo_username}")
+        else:
+            logging.warning(f"Failed to update password for user {demo_username}")
+            
+    else:
+        # Create new user
+        logging.info(f"Creating demo user: {demo_username}")
+        create_resp = safe_request(
+            "POST",
+            f"{grafana_url.rstrip('/')}/api/admin/users",
+            headers=headers,
+            json={
+                "name": "Demo User",
+                "login": demo_username,
+                "password": demo_password,
+                "email": "demo-user@example.com",
+                "role": "Viewer"  # Viewer role provides read-only access
+            }
+        )
+        
+        if create_resp.status_code in [200, 201]:
+            logging.info(f"Successfully created demo user: {demo_username}")
+        else:
+            logging.error(f"Failed to create demo user: {create_resp.status_code} - {create_resp.text}")
+            return False
+    
+    return True
+
+
 def import_static_dashboards(dashboards_dir, grafana_token):
     """
     Imports all dashboard JSON files from a directory.
@@ -488,6 +555,12 @@ if __name__ == "__main__":
     add_grafana_data_sources(grafana_token=grafana_token)
 
     logging.info("Successfully added Grafana data sources.")
+
+    logging.info("Creating demo user with read-only access...")
+    
+    create_demo_user(grafana_token=grafana_token)
+    
+    logging.info("Successfully created or updated demo user.")
 
     logging.info("Importing static dashboards from provisioning directory...")
     

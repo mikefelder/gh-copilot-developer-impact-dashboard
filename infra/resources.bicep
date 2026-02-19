@@ -33,6 +33,12 @@ param grafanaUsername string
 param grafanaPassword string
 
 @secure()
+param demoUserUsername string = ''
+
+@secure()
+param demoUserPassword string = ''
+
+@secure()
 param githubPat string
 param githubOrganizationSlugs string
 
@@ -68,6 +74,10 @@ var grafanaPasswordSecretValue = grafanaPassword != ''
   ? grafanaPassword
   : uniqueString('grafanaPassword', subscription().id, resourceGroup().id, location, resourceToken)
 var grafanaPasswordSecretFilename = 'admin_password'
+var demoUserUsernameSecretName = 'demo-user-username'
+var demoUserUsernameSecretValue = demoUserUsername != '' ? demoUserUsername : 'demo-user'
+var demoUserPasswordSecretName = 'demo-user-password'
+var demoUserPasswordSecretValue = demoUserPassword != '' ? demoUserPassword : 'dem0-passw0rd'
 var githubPatSecretName = 'github-pat'
 var managedIdentityClientIdSecretName = 'override-use-mi-fic-assertion-client-id'
 
@@ -128,6 +138,14 @@ module keyVault './modules/key-vault.bicep' = {
       {
         name: githubPatSecretName
         value: githubPat
+      }
+      {
+        name: demoUserUsernameSecretName
+        value: demoUserUsernameSecretValue
+      }
+      {
+        name: demoUserPasswordSecretName
+        value: demoUserPasswordSecretValue
       }
       {
         name: managedIdentityClientIdSecretName
@@ -281,6 +299,16 @@ var additionalUpdateGrafanaDefinition = {
       {
         name: 'GRAFANA_PASSWORD'
         keyVaultSecretName: grafanaPasswordSecretName
+        secret: true
+      }
+      {
+        name: 'DEMO_USER_USERNAME'
+        keyVaultSecretName: demoUserUsernameSecretName
+        secret: true
+      }
+      {
+        name: 'DEMO_USER_PASSWORD'
+        keyVaultSecretName: demoUserPasswordSecretName
         secret: true
       }
     ],
