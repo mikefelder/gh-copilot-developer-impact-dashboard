@@ -41,6 +41,12 @@
     "grafanaPassword": {
       "value": "${GRAFANA_PASSWORD}"
     },
+    "demoUserUsername": {
+      "value": "${DEMO_USER_USERNAME}"
+    },
+    "demoUserPassword": {
+      "value": "${DEMO_USER_PASSWORD}"
+    },
     "doRoleAssignments": {
       "value": "${AZURE_ROLE_ASSIGNMENTS=true}"
     },
@@ -104,6 +110,9 @@
     },
     "principalId": {
       "value": "${AZURE_PRINCIPAL_ID}"
+    },
+    "principalType": {
+      "value": "${AZURE_PRINCIPAL_TYPE=ServicePrincipal}"
     },
     "userPrincipalId": {
       "value": "${AZURE_USER_PRINCIPAL_ID}"
